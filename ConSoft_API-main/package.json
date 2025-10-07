@@ -3,7 +3,8 @@
 		"start": "tsx watch src/server.ts",
 		"build": "tsc",
 		"start:prod": "node dist/server.js",
-		"test": "jest"
+		"test": "jest",
+		"seed": "tsx src/scripts/seed.ts"
 	},
 	"dependencies": {
 		"bcrypt": "^6.0.0",

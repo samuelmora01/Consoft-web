@@ -39,6 +39,7 @@ export default function LoginPage() {
 			illustration='/auth/Login.png'>
 			<form
 				className='flex flex-col gap-4'
+				autoComplete='on'
 				onSubmit={handleSubmit}>
 				<AuthInput
 					value={loginData.email}
@@ -46,6 +47,7 @@ export default function LoginPage() {
 					label='Email'
 					type='email'
 					placeholder='ejemplo@email.com'
+					autoComplete='email'
 					onChange={handleChange}
 				/>
 				<AuthInput
@@ -54,6 +56,7 @@ export default function LoginPage() {
 					type='password'
 					placeholder='********'
 					value={loginData.password}
+					autoComplete='current-password'
 					onChange={handleChange}
 				/>
 

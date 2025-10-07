@@ -7,10 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function fetchCurrentUser() {
-  const res = await api.get("/api/auth/me", {withCredentials: true});
-  if (res.status !== 200) {
+  try {
+    const res = await api.get("/api/auth/me", { withCredentials: true, validateStatus: () => true });
+    if (res.status !== 200) {
+      return null;
+    }
+    return res.data;
+  } catch {
     return null;
   }
-
-  return await res.data;
 }
