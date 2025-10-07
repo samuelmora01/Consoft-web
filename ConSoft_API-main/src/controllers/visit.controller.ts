@@ -18,4 +18,29 @@ export const VisitController = {
 		if (!visit) return res.status(404).json({ message: 'Not found' });
 		return res.json(visit);
 	},
+
+	create: async (req: Request, res: Response) => {
+		try {
+			const { visitDate, address, status, services, user } = req.body || {};
+			const date = visitDate ? new Date(visitDate) : null;
+			if (!date || isNaN(date.getTime())) {
+				return res.status(400).json({ message: 'visitDate inválida o ausente' });
+			}
+			if (!address || !status) {
+				return res.status(400).json({ message: 'address y status son requeridos' });
+			}
+			const servicesArray = Array.isArray(services) ? services : (services ? [services] : []);
+			const payload = {
+				user: user ?? undefined, // si existe, se usa; si no, queda undefined
+				visitDate: date,
+				address,
+				status,
+				services: servicesArray,
+			};
+			const created = await VisitModel.create(payload as any);
+			return res.status(201).json(created);
+		} catch (err) {
+			return res.status(500).json({ error: 'Error creating visit' });
+		}
+	},
 };
