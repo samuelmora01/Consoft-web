@@ -1,0 +1,95 @@
+ ConSoft – Guía rápida para ejecutar (Windows y macOS)
+
+Este repo contiene dos proyectos:
+- ConSoft_API-main → Backend (Node + Express + MongoDB Atlas)
+- Consoft_Cliente-main → Frontend (Next.js)
+
+Sigue estos pasos tal cual.
+
+## 1) Requisitos
+- Node.js 18+ (LTS): https://nodejs.org
+- Navegador (Chrome/Edge)
+
+## 2) Base de datos lista (Mongo Atlas demo)
+- Usuario Atlas: Mariaca
+- Contraseña Atlas: 12345
+- URI (probada):
+  mongodb+srv://Mariaca:12345@consoft.wr1n8yb.mongodb.net/consoft?retryWrites=true&w=majority&appName=consoft
+
+IMPORTANTE: En Atlas → Network Access, agrega la IP del equipo (o 0.0.0.0/0 temporal para demo). Si ves “bad auth” o “IP not allowed”, es eso.
+
+## 3) Backend (API)
+En terminal:
+1. cd ConSoft_API-main
+2. Crear .env con:
+   NODE_ENV=development
+   MONGO_URI=mongodb+srv://Mariaca:12345@consoft.wr1n8yb.mongodb.net/consoft?retryWrites=true&w=majority&appName=consoft
+   JWT_SECRET=consoft_demo_secret_123
+   FRONTEND_ORIGINS=http://localhost:3001,http://localhost:3000
+3. Instalar y arrancar:
+   npm install
+   npm run start
+   Verás: “MongoDB connected” y “Server running on http://localhost:3000”
+4. (Opcional) Datos de ejemplo:
+   node scripts/seed-basic.js
+
+## 4) Frontend (cliente)
+En otra terminal:
+1. cd Consoft_Cliente-main
+2. Crear .env.local con:
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+3. Instalar y arrancar:
+   npm install
+   npm run dev
+4. Abrir: http://localhost:3001
+
+## 5) Rutas de demo
+Cliente:
+- Home: http://localhost:3001/client
+- Login: http://localhost:3001/client/auth/login
+- Registro: http://localhost:3001/client/auth/register
+- Productos: http://localhost:3001/client/productos (con detalle real)
+- Servicios: http://localhost:3001/client/servicios (buscador + carrusel)
+- Agendar cita: http://localhost:3001/client/agendarcita
+- Mis pedidos: http://localhost:3001/client/pedidos → “Ver más” → detalle → “Siguiente” (pagos QR + modal comprobante)
+
+Admin:
+- http://localhost:3001/admin (redirige a Compras → Productos)
+
+## 6) Usuario de demo
+Si corriste el seed, usa:
+- Email: demo@consoft.test
+- Contraseña: Demo1234!
+Si no existe, créalo:
+curl -X POST -H "Content-Type: application/json" -d '{"name":"Demo","email":"demo@consoft.test","password":"Demo1234!"}' http://localhost:3000/api/users
+
+## 7) Errores comunes
+- “bad auth” → Agrega tu IP en Atlas o revisa credenciales.
+- “Not allowed by CORS” → Revisa FRONTEND_ORIGINS en .env del backend.
+- Hydration error en Next → Usa incógnito o desactiva extensiones.
+- 404 en cliente → Rutas comienzan con /client/ (e.g., /client/pedidos/[id], /client/pagos/[id]).
+
+## 8) Comandos rápidos (Windows PowerShell)
+# Backend
+cd ConSoft_API-main
+npm install
+npm run start
+node scripts/seed-basic.js  # opcional
+
+# Frontend (otra terminal)
+cd Consoft_Cliente-main
+npm install
+npm run dev
+
+## 9) ¿Qué ya está listo?
+- Conexión Atlas de demo (usuario/contraseña/URI).
+- Seed con categorías, productos, servicios, pedidos y usuario demo.
+- Flujo cliente completo (productos, servicios, agenda, pedidos, pagos QR).
+- Panel admin con listados y búsqueda.
+
+## 10) Cambiar a tu propia cuenta de Atlas (opcional)
+1) Crear usuario y contraseña en Database Access.
+2) Agregar IP en Network Access.
+3) Reemplazar MONGO_URI en ConSoft_API-main/.env.
+4) Reiniciar la API (Ctrl+C y npm run start).
+5) Reinsertar datos de demo (opcional): node scripts/seed-basic.js
