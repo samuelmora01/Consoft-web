@@ -23,13 +23,19 @@ export default function LoginPage() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log(loginData)
-		const response = await api.post('/api/auth/login', loginData);
-		console.log(response)
-		if (response.status == 200) {
+		try {
+			const response = await api.post('/api/auth/login', loginData, { validateStatus: () => true });
+			if (response.status !== 200) {
+				const msg = (response.data && (response.data.message || response.data.error)) || 'Error al iniciar sesión';
+				await Swal.fire({ icon: 'error', title: 'No se pudo iniciar sesión', text: msg });
+				return;
+			}
 			const userData = await fetchCurrentUser();
 			setUser(userData);
-			router.push("/client")
+			router.push('/client');
+		} catch (err) {
+			const msg = axios.isAxiosError(err) ? (err.response?.data?.message || err.message) : 'Error inesperado';
+			await Swal.fire({ icon: 'error', title: 'Error', text: msg });
 		}
 	};
 	return (
